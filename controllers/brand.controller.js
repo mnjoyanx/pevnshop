@@ -1,8 +1,9 @@
 const { ValidationError } = require("sequelize");
 const { Brand } = require("../models");
 
-exports.getAll = (req, res) => {
-  return "all";
+exports.getAll = async (req, res) => {
+  const all = await Brand.findAll();
+  return res.status(200).json({ error: false, data: all });
 };
 
 exports.create = async (req, res) => {

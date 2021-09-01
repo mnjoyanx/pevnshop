@@ -1,12 +1,35 @@
 const { Product, Brand } = require("../models");
-const { ValidationError } = require("sequelize");
+const { ValidationError, Op } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 
 exports.getAll = async (req, res) => {
+  let { limit, page, brand_id, name } = req.query;
+  limit = limit ? parseInt(limit) : 10;
+  page = page ? parseInt(page) : 1;
+  const offset = limit * page - limit;
+
   try {
-    const all = await Product.findAll({ include: { model: Brand } });
-    return res.status(200).json({ error: false, data: all });
+    if (!brand_id && !name) {
+      const all = await Product.findAll({ limit, offset });
+      return res.status(200).json({ error: false, data: all });
+    }
+    if (brand_id && !name) {
+      const all = await Product.findAll({ where: { brand_id }, limit, offset });
+      return res.status(200).json({ error: false, data: all });
+    }
+
+    if (!brand_id && name) {
+      const all = await Product.findAll({
+        where: { name: { [Op.like]: `%${name}%` } },
+        limit,
+        offset,
+      });
+      return res.status(200).json({ error: false, data: all });
+    } else {
+      const all = await Product.findAll({ limit, offset });
+      return res.status(200).json({ error: false, data: all });
+    }
   } catch (err) {
     if (err instanceof ValidationError) {
       return res
