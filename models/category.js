@@ -3,6 +3,7 @@ module.exports = (sequelize, Sequelize) => {
     title: {
       type: Sequelize.STRING,
       allowNull: false,
+      unique: true,
     },
 
     description: {
