@@ -11,7 +11,12 @@ exports.getAll = async (req, res) => {
 
   try {
     if (!brand_id && !name) {
-      const all = await Product.findAll({ limit, offset });
+      console.log("all else ");
+      const all = await Product.findAll({
+        limit,
+        offset,
+        include: { all: true },
+      });
       return res.status(200).json({ error: false, data: all });
     }
     if (brand_id && !name) {

@@ -9,5 +9,6 @@ router.use("/auth", user);
 router.use("/product", product);
 router.use("/category", category);
 router.use("/brand", brand);
+router.use("/user", user);
 
 module.exports = router;
